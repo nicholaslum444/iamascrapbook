@@ -3,6 +3,7 @@
 * Ruby version: 2.2.2
 * Rails version: 5.0.0.1
 * Recommended platform: Linux or MacOS
+* Recommended web server: apache2
 
 # 1. Setup
 
@@ -36,7 +37,13 @@
 
 # 3. Production Deploy
 
-1. `todo`
+1. Git clone to your preferred webroot and perform the steps in [Setup](#1-setup) above
+2. Run `bundle install` in the app folder
+3. Run `bundle exec rake db:reset RAILS_ENV=production` to prepare the production database
+4. Run `bundle exec rake assets:precompile RAILS_ENV=production` to precompile the app assets
+5. Point apache2 to the app folder; Ensure that the line `RailsEnv production` is in the virtual host config file
+6. Enable the site with `sudo a2ensite ...` and restart apache2
+7. Visit the designated URL with your browser to use the app
 
 # 4. FAQ
 
