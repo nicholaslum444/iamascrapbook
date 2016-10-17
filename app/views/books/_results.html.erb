@@ -1,0 +1,35 @@
+<div id="results" class="col-xs-12">
+  <% if @books.any? %>
+    <div style="text-align: center;">
+      <p>
+        <strong><%= @books.count %> books!</strong>
+      </p>
+    </div>
+
+    <table width="100%" class="table-striped">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Rating</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @books.each do |book| %>
+        <tr id='<%= "book-#{book.id}" %>'>
+          <td><%= link_to book.title, book.url %></td>
+          <td><%= book.author_name %></td>
+          <td><%= book.rating %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div style="text-align: center;">
+      <p>
+        <strong>No books!</strong>
+      </p>
+    </div>
+  <% end %>
+
+</div>

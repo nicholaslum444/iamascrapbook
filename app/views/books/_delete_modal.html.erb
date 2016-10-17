@@ -1,0 +1,29 @@
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="settingsModalLabel">Settings</h4>
+      </div>
+      <div class="modal-body">
+        <form id="delete" role="form">
+          <label for="delete-book-id">Delete this entry?</label>
+          <input type="hidden" class="form-control delete-book-id" name="delete-book-id" required>
+          <button type="submit" class="btn btn-danger">Confirm Delete</button>
+        </form>
+        <div id="delete-spinner" style="display:none">
+          <p>Deleting entry... Please wait...</p>
+          <div class="load-bar">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id=close-delete-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

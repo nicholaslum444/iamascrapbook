@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Books</h1>
+    <p>Disclaimer: some data may not be accurate.</p>
+  </div>
+
+  <%= render 'results' %>
+
+  <div id="settings" class="col-xs-12">
+    <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#settingsModal">Settings</button>
+  </div>
+
+	<p><%= link_to 'Home', home_index_path %></p>
+</div>
+
+<%= render 'settings_modal' %>
+<%= render 'edit_modal' %>
+<%= render 'delete_modal' %>

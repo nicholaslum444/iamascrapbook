@@ -1,0 +1,46 @@
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="settingsModalLabel">Edit</h4>
+      </div>
+      <div class="modal-body">
+        <form id="edit" role="form">
+          <div class="form-group">
+            <input class="form-control book-id" type="hidden" name="id">
+            <label for="title">Title:</label>
+            <input class="form-control book-title" name="title" placeholder="Book Title" required>
+            <label for="author">Author:</label>
+            <input class="form-control book-author" name="author" placeholder="Author" required>
+            <label for="author-bio">Author Bio:</label>
+            <input class="form-control book-author-bio" name="author-bio" placeholder="Author Bio" required>
+            <label for="description">Description:</label>
+            <input class="form-control book-description" name="description" placeholder="Book Description" required>
+            <label for="price">Price in USD:</label>
+            <input class="form-control book-price" type="number" step="0.01" name="price" placeholder="Book Price" required>
+            <label for="rating">Rating:</label>
+            <input class="form-control book-rating" name="rating" placeholder="Book Rating" required>
+            <label for="image-url">Cover Image Url:</label>
+            <input class="form-control book-image-url" name="image-url" placeholder="Cover Image Url" required>
+            <label for="book-url">Amazon Page Url:</label>
+            <input class="form-control book-url" name="book-url" placeholder="Amazon Page Url" required>
+          </div>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+        <div id="edit-spinner" style="display:none">
+          <p>Making changes... Please wait...</p>
+          <div class="load-bar">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id=close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

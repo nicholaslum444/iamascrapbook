@@ -33,6 +33,12 @@ gem 'mysql2'
 # Scrape
 gem 'nokogiri'
 
+# Form Helper
+gem 'simple_form'
+
+# Font Awesome
+gem 'font-awesome-rails'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

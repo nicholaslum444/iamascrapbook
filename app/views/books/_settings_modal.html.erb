@@ -1,0 +1,37 @@
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="settingsModalLabel">Settings</h4>
+      </div>
+      <div class="modal-body">
+        <form id="rescrape" role="form">
+          <label for="rescrape-yn">Rescrape Backend Data (Warning: This takes a long time and the website will be slow until it finishes scraping)</label>
+          <select id="rescrape-yn" name="rescrape-yn">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+          <button type="submit" class="btn btn-danger">Rescrape</button>
+        </form>
+        <div id="spinner" style="display:none">
+          <p>Rescraping data... Please wait...</p>
+          <p>This will take some time. Why not visit <a href="http://nuscomputing.com/" target="_blank">NUS Students' Computing Club</a> in the meantime?</p>
+          <div class="load-bar">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+        <div id="rescrape-success" style="display:none;">
+          <p>Rescrape Success!</p>
+          <div class="btn btn-success" onclick="window.location.reload()">Refresh</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id=close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

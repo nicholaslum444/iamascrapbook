@@ -1,0 +1,22 @@
+<%= simple_form_for :skill do |f| %>
+  <%= f.association :mc_wing, label: 'Choose the skill:', label_method: :wingname, value_method: :wingid, include_blank: false %>
+  <%= f.input :content, as: :ckeditor, input_html: { ckeditor: { toolbar: 'Full'} } %>
+  <br>
+  <%= f.button :submit, 'Submit', class: 'radius success' %>
+  <%= link_to "Cancel", :back, class: 'radius button alert' %>
+<% end %>
+
+<%= simple_form_for :book, url: mc_locker_locker_allocations_path, method: :get, remote: true do |f|  %>
+  <%= f.input :year, collection: LockerRound.select('acad_year').distinct.order('acad_year desc'), label_method: :acad_year, value_method: :acad_year, include_blank: false %>
+  <%= f.button :submit, 'Retrieve Allocations', class: 'radius info button expand', name: 'retrieve' %>
+<% end %>
+
+
+<form id="filter" role="form">
+  <div class="form-group">
+    <label for="skill-filter">Choose the skill:</label>
+    <select name="skill-filter" id="skill-filter" class="form-control">
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success">See Books</button>
+</form>
