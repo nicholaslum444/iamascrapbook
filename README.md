@@ -25,7 +25,7 @@
 
 # 2. Local Deploy
 
-1. Run `bundle install` after carrying out the steps in [Setup](#setup) above
+1. Run `bundle install` after carrying out the steps in [Setup](#1-setup) above
 2. Run `bundle exec rake db:reset` to prepare the database
 3. Run `rails s` to launch the app
 4. Visit `http://localhost:3000` on your browser to use the app
