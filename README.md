@@ -1,9 +1,16 @@
 # 0. General Information
 
+## 0.1. Academic
+* School: National University of Singapore
+* Course: CS3103
+* Group: 01
+* Members: Nicholas Lum, Kenneth Ho, Low Wei Kit, Ng Zi Kai
+
+## 0.2. Technical
 * Ruby version: 2.2.2
 * Rails version: 5.0.0.1
 * Recommended platform: Linux or MacOS
-* Recommended web server: apache2
+* Recommended production web server: apache2
 
 # 1. Setup
 
@@ -37,6 +44,8 @@
 
 # 3. Production Deploy
 
+This section is only relevant if you intend to deploy it in a production environment.
+
 1. Git clone to your preferred webroot and perform the steps in [Setup](#1-setup) above
 2. Run `bundle install` in the app folder
 3. Run `bundle exec rake db:reset RAILS_ENV=production` to prepare the production database
@@ -45,6 +54,11 @@
 6. Enable the site with `sudo a2ensite ...` and restart apache2
 7. Visit the designated URL with your browser to use the app
 
-# 4. FAQ
+# 4. App Usage
 
-1. `todo`
+This assumes you have already set up the app and it is running on localhost:3000.
+
+1. Visit `localhost:3000/scrape/rescrape` to start the scraping; currently it can only scrape programming books from Amazon.
+2. Scraping will take at least half an hour, so leave the site alone and go do some other things in the meantime
+3. You can stop the scraping any time by killing the rails server
+4. Visit `localhost:300/books` to view the scraped books
