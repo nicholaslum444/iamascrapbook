@@ -2,11 +2,9 @@ Rails.application.routes.draw do
 
   resources 'books'
 
-  get 'home/index'
-
-  get 'scrape/index'
-
-  get 'scrape/scrape'
+  get 'scrape', to:'scrape#index', as: 'scrape'
+  get 'scrape/rescrape'
+  get 'scrape/test'
 
   root 'home#index'
 

@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017123559) do
+ActiveRecord::Schema.define(version: 20161019123754) do
 
   create_table "books", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
     t.string   "author_name"
-    t.string   "author_bio"
+    t.text     "author_bio",  limit: 65535
     t.text     "desc",        limit: 65535
     t.decimal  "price",                     precision: 10
     t.decimal  "rating",                    precision: 10
