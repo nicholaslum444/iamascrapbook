@@ -1,8 +1,23 @@
-<div class="row">
-  <div class="col-xs-12">
-    <h1>Intelligent Amazon Scraper for Books</h1>
-  </div>
+<%= stylesheet_link_tag "home" %>
+<div class="centered">
 
-	<p><%= link_to 'See what books we have!', books_path %></p>
-  <p><%= link_to 'Scrape more books if you are admin!', scrape_path %></p>
+<table>
+	<tr>
+		<td colspan=2><h1>iamascrapbook</h1></td>
+	</tr>
+	<tr>
+		<td colspan=2><h2>Intelligent Amazon Book Scrapper</h2></td>
+	</tr>
+	<tr>
+		<td colspan=2 align=center>
+			<%= form_tag(books_path, id: "search-form", method: "get") do%>
+			<%= text_field_tag :search, params[:search], placeholder: "Search... (ISBN, Author, Language)", :class => 'text'%>
+			<% end %>
+		</td>
+	</tr>
+	<tr>
+		<td><p><%= link_to 'See all our books!', books_path, :class=>"color"%></p></td>
+		<td><p><%= link_to 'Admin Console', scrape_path, :class=>"color"%></p></td>
+	</tr>
+</table>
 </div>
