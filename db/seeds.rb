@@ -29,27 +29,27 @@ skills = Skill.create([
                       ]);
 books = Book.create([
                         {
-                            title: 'javascript abc',
-                            author_name: 'nick lum',
-                            author_bio: 'he is cool',
-                            desc: 'a book on js',
+                            title: 'The Ruby Programming Language: Everything You Need to Know',
+                            isbn13: '978-0596516178',
+                            author_name: 'David Flanagan and Yukihiro Matsumoto',
+                            description: 'Ruby Book',
+                            shop: 'amazon',
+                            url: 'https://www.amazon.com/Ruby-Programming-Language-Everything-Need/dp/0596516177/ref=sr_1_1?ie=UTF8&qid=1478117977&sr=8-1&keywords=ruby+programming+book',
                             price: 3.16,
-                            rating: 4.5,
-                            image_url: 'http://www.pngall.com/wp-content/uploads/2016/03/John-Cena-Logo-PNG.png',
-                            skill: 'javascript',
-                            is_scraped: false,
-                            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                            image_url: 'https://images-na.ssl-images-amazon.com/images/I/51i0hr6kccL._SX383_BO1,204,203,200_.jpg',
+                            skill: 'ruby',
+                            is_scraped: false
                         },
                         {
-                            title: 'java abc',
-                            author_name: 'nick lumply',
-                            author_bio: 'he is hot not cool',
-                            desc: 'a book on jv',
-                            price: 3.17,
-                            rating: 4.1,
-                            image_url: 'https://i.ytimg.com/vi/RY7vcYvb69k/maxresdefault.jpg',
+                            title: 'Java: A Beginner\'s Guide, Sixth Edition',
+                            isbn13: '978-0071809252',
+                            author_name: 'Herbert Schildt',
+                            description: 'Java Book',
+                            shop: 'amazon',
+                            url: 'https://www.amazon.com/Java-Beginners-Guide-Herbert-Schildt/dp/0071809252/ref=sr_1_1?ie=UTF8&qid=1478121604&sr=8-1&keywords=java+programming+book',
+                            price: 3.16,
+                            image_url: 'https://images-na.ssl-images-amazon.com/images/I/51hqf-LtShL._SX402_BO1,204,203,200_.jpg',
                             skill: 'java',
-                            is_scraped: false,
-                            url: 'https://www.youtube.com/watch?v=d9TpRfDdyU0'
+                            is_scraped: false
                         }
                     ]);

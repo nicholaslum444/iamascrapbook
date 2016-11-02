@@ -5,13 +5,6 @@
 
   <%= render 'results' %>
 
-  <div id="settings" class="col-xs-12">
-    <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#settingsModal">Settings</button>
-  </div>
-
 	<p><%= link_to 'Home', root_path %></p>
+  <p><%= link_to 'Admin Console', admin_path %></p>
 </div>
-
-<%= render 'settings_modal' %>
-<%= render 'edit_modal' %>
-<%= render 'delete_modal' %>

@@ -4,7 +4,9 @@ Rails.application.routes.draw do
 
   get 'scrape', to:'scrape#index', as: 'scrape'
   get 'scrape/rescrape'
-  get 'scrape/test'
+  get 'test', to: 'scrape#test', as: 'test'
+
+  get 'admin', to: 'scrape#index', as: 'admin'
 
   root 'home#index'
 
