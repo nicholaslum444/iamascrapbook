@@ -31,7 +31,7 @@ books = Book.create([
                         {
                             title: 'The Ruby Programming Language: Everything You Need to Know',
                             isbn13: '978-0596516178',
-                            author_name: 'David Flanagan and Yukihiro Matsumoto',
+                            author_name: 'David Flanagan',
                             shop: 'amazon',
                             url: 'https://www.amazon.com/Ruby-Programming-Language-Everything-Need/dp/0596516177/ref=sr_1_1?ie=UTF8&qid=1478117977&sr=8-1&keywords=ruby+programming+book',
                             price: 3.16,

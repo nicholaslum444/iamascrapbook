@@ -3,8 +3,7 @@ Rails.application.routes.draw do
   resources 'books'
 
   get 'scrape', to:'scrape#index', as: 'scrape'
-  get 'scrape/rescrape'
-  get 'test', to: 'scrape#test', as: 'test'
+  post 'rescrape', to: 'scrape#rescrape', as: 'rescrape'
 
   get 'admin', to: 'scrape#index', as: 'admin'
 

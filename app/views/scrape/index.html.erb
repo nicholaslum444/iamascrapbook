@@ -1,31 +1,17 @@
 <div class="row">
   <div class="col-xs-12">
     <h1>admin</h1>
-    <p>Carry out the scrape here. Password locked.</p>
   </div>
 
-  <form id="rescrape" role="form">
-    <label for="rescrape-yn">Rescrape Backend Data <small>Warning: This takes a long time and the website will be slow until it finishes scraping)</small></label><br>
-    <select id="rescrape-yn" name="rescrape-yn">
-      <option value="no">No</option>
-      <option value="yes">Yes</option>
-    </select>
-	  <br>
-    <button type="submit" class="btn btn-danger">Rescrape</button>
-  </form>
-  <div id="spinner" style="display:none">
-    <p>Rescraping data... Please wait...</p>
-    <p>This will take some time. Why not visit <a href="http://nuscomputing.com/" target="_blank">NUS Students' Computing Club</a> in the meantime?</p>
-    <div class="load-bar">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </div>
-  </div>
-  <div id="rescrape-success" style="display:none;">
-    <p>Rescrape Success!</p>
-    <div class="btn btn-success" onclick="window.location.reload()">Refresh</div>
-  </div>
+	<center>
+	  <%= form_tag(rescrape_path, method: 'post') do %>
+	    <p>Rescrape data to update the database with new books and prices.<br>
+	      Warning, the scraping will take a long time to finish!</p>
+	    <%= label_tag('password', 'Admin password:') %>
+	    <%= password_field_tag('password', '', autofocus: 'true') %>
+	    <%= submit_tag('Rescrape', class: 'btn btn-danger') %>
+	  <% end %>
+	</center>
 
   <p><%= link_to 'Home', root_path %></p>
   <p><%= link_to 'See all our books!', books_path %></p>

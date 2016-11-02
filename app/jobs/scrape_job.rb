@@ -2,6 +2,7 @@ require 'open-uri'
 require 'openssl'
 
 class ScrapeJob < ApplicationJob
+  queue_as :default
 
   # default delay between network calls
   DELAY = 2 # seconds
@@ -9,8 +10,7 @@ class ScrapeJob < ApplicationJob
   # set the User-Agent string to bypass scraping block on amazon
   USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.854.0 Safari/535.2'
 
-  queue_as :default
-
+  # main method, will run this when called by other class
   def perform(*args)
     Skill.all.each do |skill|
       scrape_amazon(skill.value)
@@ -154,7 +154,8 @@ class ScrapeJob < ApplicationJob
       # coverurl on book page
       image_url = ''
       if (book_page.css("#imgBlkFront").count > 0)
-        image_url = book_page.at_css("#imgBlkFront").attr("src")
+        # some problem, always returning base64 encoding, dunno how to avoid that
+        #image_url = book_page.css('#imgBlkFront').attr('src')
       end
 
       # all data farmed
@@ -166,7 +167,7 @@ class ScrapeJob < ApplicationJob
         insert_book(title, isbn13, author, detail_page_url, 'amazon', image_url, price, skill)
       else
         # book exists so compare prices
-        update_book(isbn13, price, detail_page_url, 'amazon', image_url)
+        update_book(isbn13, price, title, author, detail_page_url, 'amazon', image_url)
       end
 
     rescue OpenURI::HTTPError
@@ -178,15 +179,18 @@ class ScrapeJob < ApplicationJob
 
   # updates a book in the database if the new book is cheaper
   # should be usable by both amazon and ebay scrape functions
-  def update_book(isbn13, price, url, shop, image_url)
+  def update_book(isbn13, price, title, author, url, shop, image_url)
     book = Book.find_by(isbn13: isbn13)
 
     # compare prices, it should work since price should be a number here
-    if book.price > price
+    if book.price >= price
       book.price = price
+      book.title = title
+      book.author_name = author
       book.url = url
       book.shop = shop
-      book.image_url = image_url
+      book.image_url = image_url.blank? ? 'https://upload.wikimedia.org/wikipedia/en/7/73/Image_unavailable.jpg' : image_url
+      book.is_scraped = true
 
       book.save
     end
@@ -199,11 +203,11 @@ class ScrapeJob < ApplicationJob
     book = Book.new
 
     book.isbn13 = isbn13
-    book.title = title.blank? ? title : 'Unknown Title'
-    book.author_name = author.blank? ? author : 'Unknown Author'
+    book.title = title.blank? ? 'Unknown Title' : title
+    book.author_name = author.blank? ? 'Unknown Author' : author
     book.url = url
     book.shop = shop
-    book.image_url = image_url.blank? ? image_url : 'https://upload.wikimedia.org/wikipedia/en/7/73/Image_unavailable.jpg'
+    book.image_url = image_url.blank? ? 'https://upload.wikimedia.org/wikipedia/en/7/73/Image_unavailable.jpg' : image_url
     book.price = price
     book.skill = skill
     book.is_scraped = true

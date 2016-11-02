@@ -9,17 +9,19 @@
     <table width="100%" class="table-striped">
       <thead>
       <tr>
+        <th>ISBN-13</th>
         <th>Title</th>
         <th>Author</th>
-        <th>Rating</th>
+        <th>Price</th>
       </tr>
       </thead>
       <tbody>
       <% @books.each do |book| %>
         <tr id='<%= "book-#{book.id}" %>'>
-          <td><%= link_to book.title, book.url %></td>
+          <td><%= book.isbn13 %></td>
+          <td><%= link_to book.title, book.url, target: '_blank' %></td>
           <td><%= book.author_name %></td>
-          <td><%= book.rating %></td>
+          <td><%= format '%.2f', book.price %></td>
         </tr>
       <% end %>
       </tbody>
