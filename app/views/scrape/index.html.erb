@@ -1,15 +1,11 @@
 <div class="row">
   <div class="col-xs-12">
-    <h1>Scrape Control</h1>
+    <h1>admin</h1>
     <p>Carry out the scrape here. Password locked.</p>
   </div>
 
-  <div id="settings" class="col-xs-12">
-    <button type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#settingsModal">Settings</button>
-  </div>
-
   <form id="rescrape" role="form">
-    <label for="rescrape-yn">Rescrape Backend Data (Warning: This takes a long time and the website will be slow until it finishes scraping)</label>
+    <label for="rescrape-yn">Rescrape Backend Data <small>Warning: This takes a long time and the website will be slow until it finishes scraping)</small></label><br>
     <select id="rescrape-yn" name="rescrape-yn">
       <option value="no">No</option>
       <option value="yes">Yes</option>
