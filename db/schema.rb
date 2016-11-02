@@ -10,20 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102211710) do
+ActiveRecord::Schema.define(version: 20161102222022) do
 
   create_table "books", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
     t.string   "author_name"
-    t.decimal  "price",                     precision: 10
+    t.decimal  "price",       precision: 10, scale: 2
     t.string   "image_url"
     t.string   "skill"
     t.boolean  "is_scraped"
     t.string   "url"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "shop"
-    t.text     "description", limit: 65535
     t.string   "isbn13"
   end
 
