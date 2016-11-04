@@ -8,7 +8,7 @@ class ScrapeJob < ApplicationJob
   DELAY = 4 # seconds
 
   # set the User-Agent string to bypass scraping block on amazon
-  USER_AGENT = 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.2 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+  USER_AGENT = 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.5 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
 
   # unknown image default url
   UNKNOWN_IMAGE_URL = 'https://upload.wikimedia.org/wikipedia/en/7/73/Image_unavailable.jpg'
@@ -18,10 +18,10 @@ class ScrapeJob < ApplicationJob
     skills = Skill.all.shuffle
     skills.each do |skill|
       puts "starting scrape for #{skill.value}"
-      scrape_amazon(skill.value)
+      #scrape_amazon(skill.value)
       #scrape_amazon('javascript')
       # TODO uncomment ebay when done
-      #scrape_ebay(skill.value)
+      scrape_ebay(skill.value)
     end
   end
 
@@ -35,33 +35,61 @@ class ScrapeJob < ApplicationJob
       result_page = Nokogiri::HTML(open(search_url, 'User-Agent' => USER_AGENT))
 
       # get the results, which are elements with the specified css
-      results = result_page.css('.SOME-CSS-CLASS-OR-IDENTIFIER') # TODO, follow the amazon example
+      results = result_page.css('.sresult') # TODO, follow the amazon example
+      puts "number of #{skill} books: #{results.size}"
 
-      # delay before crawling each book
-      sleep(DELAY)
+      if results.blank?
+        return puts 'no results, moving on'
+      end
 
       # for each result element, scrape further
       results.each do |result|
         # get the url of the book detail page
-        detail_page_url = result.at_css('.SOME-CSS-CLASS-OR-IDENTIFIER').attr('href') # TODO, follow the amazon example
+        detail_page_url = result.at_css('.vip').attr('href') # TODO, follow the amazon example
+        puts "scraping book: #{detail_page_url}"
 
         # scrape the book detail page since there are more details there
         scrape_detail_ebay(skill, detail_page_url)
+        puts "done scraping book: #{detail_page_url}"
 
         # delay before doing the next book
         sleep(DELAY)
       end
 
-    rescue OpenURI::HTTPError
+    rescue OpenURI::HTTPError => e
+      puts e
+      puts 'ending scrape, bye'
       # delay before restarting
-      sleep(DELAY)
-      return scrape_ebay(skill)
+      #sleep(DELAY)
+      #return scrape_ebay(skill)
 
     end
   end
 
   def scrape_detail_ebay(skill, detail_page_url)
-    # TODO follow amazon example
+    if !detail_page_url.start_with?('http://')
+      return puts 'invalid url, moving on'
+    end
+
+    begin
+      puts "scrape detail ebay"
+      # open the detail page with noko
+      book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => USER_AGENT))
+
+      # get the isbn-13 number first, if no isbn then we throw away the book
+      isbn13 = ''
+
+      # .itemAttr table, list the td tags, isbn13 should be inside one of them
+      book_page.css('.itemAttr td').each do |node|
+        #split = node.text.split(' ')
+        detail = node.text.strip
+        puts "product details field: #{detail}"
+        #if split[0].include? 'ISBN-13'
+        #  isbn13 = split[1]
+        #  break
+        #end
+      end
+    end
   end
 
   # ---------------------- #
