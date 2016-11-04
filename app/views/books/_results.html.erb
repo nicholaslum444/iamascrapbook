@@ -13,6 +13,9 @@
         <th>Title</th>
         <th>Author</th>
         <th>Price</th>
+        <th>Image</th>
+        <th>Topic</th>
+        <th>Store</th>
       </tr>
       </thead>
       <tbody>
@@ -22,6 +25,9 @@
           <td><%= link_to book.title, book.url, target: '_blank' %></td>
           <td><%= book.author_name %></td>
           <td><%= format '%.2f', book.price %></td>
+          <td><%= image_tag book.image_url %></td>
+          <td><%= book.skill %></td>
+          <td><%= book.shop %></td>
         </tr>
       <% end %>
       </tbody>

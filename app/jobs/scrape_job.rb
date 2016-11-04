@@ -8,7 +8,7 @@ class ScrapeJob < ApplicationJob
   DELAY = 4 # seconds
 
   # set the User-Agent string to bypass scraping block on amazon
-  USER_AGENT = 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.2 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+  USER_AGENT = 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.1 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
 
   # unknown image default url
   UNKNOWN_IMAGE_URL = 'https://upload.wikimedia.org/wikipedia/en/7/73/Image_unavailable.jpg'
@@ -108,7 +108,7 @@ class ScrapeJob < ApplicationJob
   end
 
   def scrape_detail_amazon(skill, detail_page_url)
-    if !detail_page_url.start_with?('https://')
+    unless detail_page_url.start_with?('https://')
       return puts 'invalid url, moving on'
     end
 
@@ -143,11 +143,11 @@ class ScrapeJob < ApplicationJob
       elsif book_page.css('span.a-exisize-medium.a-color-price.offer-price.a-text-normal').count > 0
         price = book_page.css('span.a-size-medium.a-color-price.offer-price.a-text-normal').text.strip[1..-1]
 
-      elsif book_page.css('#newOfferAccordionRow span.header-price').count > 0
-        price = book_page.at_css('#newOfferAccordionRow span.header-price').text.strip[1..-1]
-
       elsif book_page.css('#addToCart span.header-price').count > 0
         price = book_page.at_css('#addToCart span.header-price').text.strip[1..-1]
+
+      elsif book_page.css('#buyNewSection span.a-size-medium.a-color-price.offer-price.a-text-normal').count > 0
+        price = book_page.at_css('#buyNewSection span.a-size-medium.a-color-price.offer-price.a-text-normal').text.strip[1..-1]
 
       elsif book_page.css('#mediaTab_content_landing span.header-price').count > 0
         price = book_page.at_css('#mediaTab_content_landing span.header-price').text.strip[1..-1]
@@ -166,7 +166,7 @@ class ScrapeJob < ApplicationJob
 
       # title on book page
       title = ''
-      if (book_page.css("#productTitle").count > 0)
+      if book_page.css("#productTitle").count > 0
         title = book_page.at_css("#productTitle").text
       else
         title = book_page.at_css("#ebooksProductTitle").text
@@ -174,19 +174,20 @@ class ScrapeJob < ApplicationJob
 
       # author info on book page
       author = ''
-      if (book_page.css("a.contributorNameID").count > 0)
+      if book_page.css('a.contributorNameID').count > 0
         # authorname on book page
-        author = book_page.at_css("a.contributorNameID").text
+        author = book_page.at_css('a.contributorNameID').text
       else
         # authorname on book page
-        author = book_page.at_css("span.author>a").text
+        author = book_page.at_css('span.author>a').text
       end
 
       # coverurl on book page
       image_url = ''
-      if (book_page.css("#imgBlkFront").count > 0)
+      if book_page.css('#imgBlkFront').count > 0
         # some problem, always returning base64 encoding, dunno how to avoid that
-        #image_url = book_page.css('#imgBlkFront').attr('src')
+        image_url = book_page.css('#imgBlkFront').attr('src')
+        puts "image url: #{image_url}"
       end
 
       # all data farmed
