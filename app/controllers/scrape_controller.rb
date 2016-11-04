@@ -7,7 +7,8 @@ class ScrapeController < ApplicationController
   def rescrape
     # send this to a background job
     password = params['password']
-    if password == 'password123'
+    puts "entered password: #{password}"
+    if password == Rails.application.secrets.admin_password
       ScrapeJob.perform_later
       redirect_to root_path
     else
