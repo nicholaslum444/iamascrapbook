@@ -7,19 +7,19 @@ class ScrapeJob < ApplicationJob
   # default delay between network calls
   DELAY = 4 # seconds
 
-  # set the User-Agent string to bypass scraping block on amazon
-  USER_AGENT = 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.1 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+  # RNG
+  RNG = Random.new
 
   # unknown image default url
   UNKNOWN_IMAGE_URL = 'https://upload.wikimedia.org/wikipedia/en/7/73/Image_unavailable.jpg'
 
   # main method, will run this when called by other class
   def perform(*args)
+    puts 'starting scrape'
     skills = Skill.all.shuffle
     skills.each do |skill|
       puts "starting scrape for #{skill.value}"
       scrape_amazon(skill.value)
-      #scrape_amazon('javascript')
       # TODO uncomment ebay when done
       #scrape_ebay(skill.value)
     end
@@ -32,7 +32,7 @@ class ScrapeJob < ApplicationJob
 
     begin
       # open page with nokogiri
-      result_page = Nokogiri::HTML(open(search_url, 'User-Agent' => USER_AGENT))
+      result_page = Nokogiri::HTML(open(search_url, 'User-Agent' => get_user_agent))
 
       # get the results, which are elements with the specified css
       results = result_page.css('.SOME-CSS-CLASS-OR-IDENTIFIER') # TODO, follow the amazon example
@@ -73,7 +73,7 @@ class ScrapeJob < ApplicationJob
 
     begin
       # open page with nokogiri
-      result_page = Nokogiri::HTML(open(search_url, 'User-Agent' => USER_AGENT))
+      result_page = Nokogiri::HTML(open(search_url, 'User-Agent' => get_user_agent))
 
       # get the results, which are elements with the specified css
       results = result_page.css('.s-result-item')
@@ -114,7 +114,7 @@ class ScrapeJob < ApplicationJob
 
     begin
       # open the detail page with noko
-      book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => USER_AGENT))
+      book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => get_user_agent))
 
       # get the isbn-13 number first, if no isbn then we throw away the book
       isbn13 = ''
@@ -249,6 +249,13 @@ class ScrapeJob < ApplicationJob
     book.is_scraped = true
 
     book.save
+  end
+
+  # set the User-Agent string to bypass scraping block on amazon
+  def get_user_agent
+    user_agent = "Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.#{RNG.rand(1..99)} (KHTML, like Gecko) Chrome/6.0.472.#{RNG.rand(1..99)} Safari/534.3"
+    puts "user_agent: #{user_agent}"
+    return user_agent
   end
 
 end
