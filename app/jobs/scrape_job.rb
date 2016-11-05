@@ -18,10 +18,10 @@ class ScrapeJob < ApplicationJob
     skills = Skill.all.shuffle
     skills.each do |skill|
       puts "starting scrape for #{skill.value}"
-      #scrape_amazon(skill.value)
+      scrape_amazon(skill.value)
       #scrape_amazon('javascript')
-      # TODO uncomment ebay when done
       scrape_ebay(skill.value)
+      #scrape_ebay('javascript')
     end
   end
 
@@ -53,7 +53,7 @@ class ScrapeJob < ApplicationJob
         puts "done scraping book: #{detail_page_url}"
 
         # delay before doing the next book
-        #sleep(DELAY)
+        sleep(DELAY)
       end
 
     rescue OpenURI::HTTPError => e
@@ -229,7 +229,7 @@ class ScrapeJob < ApplicationJob
         split = node.text.split(' ')
         puts "product details field: #{split}"
         if split[0].include? 'ISBN-13'
-          isbn13 = split[1]
+          isbn13 = split[1].tr('-', '')
           break
         end
       end
