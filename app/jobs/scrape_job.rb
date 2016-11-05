@@ -53,7 +53,7 @@ class ScrapeJob < ApplicationJob
         puts "done scraping book: #{detail_page_url}"
 
         # delay before doing the next book
-        sleep(DELAY)
+        #sleep(DELAY)
       end
 
     rescue OpenURI::HTTPError => e
@@ -72,23 +72,100 @@ class ScrapeJob < ApplicationJob
     end
 
     begin
-      puts "scrape detail ebay"
       # open the detail page with noko
       book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => USER_AGENT))
 
       # get the isbn-13 number first, if no isbn then we throw away the book
+      # get the author too. don't waste the loop and do later
+      isNextCellIsbn = false
+      isNextCellAuthor = false
       isbn13 = ''
+      author = ''
 
       # .itemAttr table, list the td tags, isbn13 should be inside one of them
       book_page.css('.itemAttr td').each do |node|
-        #split = node.text.split(' ')
-        detail = node.text.strip
-        puts "product details field: #{detail}"
-        #if split[0].include? 'ISBN-13'
-        #  isbn13 = split[1]
-        #  break
-        #end
+        cellContent = node.text.strip
+        puts "product details field: #{cellContent}"
+
+        # checks if next cell is author or isbn (due to the way the html is structured)
+        if cellContent.include? 'ISBN-13'
+          isNextCellIsbn = true
+          next
+        elsif cellContent.include? 'Author'
+          isNextCellAuthor = true
+          next
+        end
+
+        # if either isNextCellIsbn or isNextCellAuthor is true then record the isbn or author
+        if isNextCellIsbn
+          isbn13 = cellContent
+          isNextCellIsbn = false
+        elsif isNextCellAuthor
+          author = cellContent
+          isNextCellAuthor = false
+        end
       end
+
+      # throw book if no isbn
+      if isbn13.blank?
+        puts 'no isbn, throw away'
+        return
+      end
+
+      price = ''
+      currency = ''
+
+      # loop and get the details of the price
+      book_page.css('.vi-price span').each do |node|
+        if node.attr('itemprop').eql? 'price'
+          price = node.attr('content')
+          puts price
+        elsif node.attr('itemprop').eql? 'priceCurrency'
+          currency = node.attr('content').upcase
+          puts currency
+        end
+      end
+
+      # throw book if no price or price is not usd, cos cannot compare or price cui
+      if price.blank? || !currency.eql?('USD')
+        puts 'no price, throw away'
+        return
+      end
+
+      # since there's price, convert it to number
+      price = price.to_f
+
+      # get the rest of the relevant data
+
+      # title on book page
+      title = book_page.css("#itemTitle").xpath('text()')
+
+      # check if author is successfully captured earlier
+      if author.eql? ''
+        puts 'really no author'
+      end
+
+      # coverurl on book page
+      image_url = book_page.css("#icImg").attr('src')
+
+      # all data farmed
+
+      # now to find matching isbn
+      existing_book = Book.find_by(isbn13: isbn13)
+      if existing_book.blank?
+        # no existing book hence create new record
+        insert_book(title, isbn13, author, detail_page_url, 'ebay', image_url, price, skill)
+      else
+        # book exists so compare prices
+        update_book(isbn13, price, title, author, detail_page_url, 'ebay', image_url)
+      end
+
+    rescue OpenURI::HTTPError => e
+      puts e
+      puts 'error, try again'
+      # delay before restarting
+      sleep(DELAY)
+      scrape_detail_ebay(skill, detail_page_url)
     end
   end
 
