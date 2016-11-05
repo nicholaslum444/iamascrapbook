@@ -30,7 +30,7 @@ skills = Skill.create([
 books = Book.create([
                         {
                             title: 'The Ruby Programming Language: Everything You Need to Know',
-                            isbn13: '978-0596516178',
+                            isbn13: '9780596516178',
                             author_name: 'David Flanagan',
                             shop: 'amazon',
                             url: 'https://www.amazon.com/Ruby-Programming-Language-Everything-Need/dp/0596516177/ref=sr_1_1?ie=UTF8&qid=1478117977&sr=8-1&keywords=ruby+programming+book',
@@ -41,7 +41,7 @@ books = Book.create([
                         },
                         {
                             title: 'Java: A Beginner\'s Guide, Sixth Edition',
-                            isbn13: '978-0071809252',
+                            isbn13: '9780071809252',
                             author_name: 'Herbert Schildt',
                             shop: 'amazon',
                             url: 'https://www.amazon.com/Java-Beginners-Guide-Herbert-Schildt/dp/0071809252/ref=sr_1_1?ie=UTF8&qid=1478121604&sr=8-1&keywords=java+programming+book',

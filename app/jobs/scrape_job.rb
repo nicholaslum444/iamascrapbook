@@ -20,8 +20,9 @@ class ScrapeJob < ApplicationJob
     skills.each do |skill|
       puts "starting scrape for #{skill.value}"
       scrape_amazon(skill.value)
-      # TODO uncomment ebay when done
-      #scrape_ebay(skill.value)
+      #scrape_amazon('javascript')
+      scrape_ebay(skill.value)
+      #scrape_ebay('javascript')
     end
   end
 
@@ -35,33 +36,138 @@ class ScrapeJob < ApplicationJob
       result_page = Nokogiri::HTML(open(search_url, 'User-Agent' => get_user_agent))
 
       # get the results, which are elements with the specified css
-      results = result_page.css('.SOME-CSS-CLASS-OR-IDENTIFIER') # TODO, follow the amazon example
+      results = result_page.css('.sresult') # TODO, follow the amazon example
+      puts "number of #{skill} books: #{results.size}"
 
-      # delay before crawling each book
-      sleep(DELAY)
+      if results.blank?
+        return puts 'no results, moving on'
+      end
 
       # for each result element, scrape further
       results.each do |result|
         # get the url of the book detail page
-        detail_page_url = result.at_css('.SOME-CSS-CLASS-OR-IDENTIFIER').attr('href') # TODO, follow the amazon example
+        detail_page_url = result.at_css('.vip').attr('href') # TODO, follow the amazon example
+        puts "scraping book: #{detail_page_url}"
 
         # scrape the book detail page since there are more details there
         scrape_detail_ebay(skill, detail_page_url)
+        puts "done scraping book: #{detail_page_url}"
 
         # delay before doing the next book
         sleep(DELAY)
       end
 
-    rescue OpenURI::HTTPError
+    rescue OpenURI::HTTPError => e
+      puts e
+      puts 'ending scrape, bye'
       # delay before restarting
-      sleep(DELAY)
-      return scrape_ebay(skill)
+      #sleep(DELAY)
+      #return scrape_ebay(skill)
 
     end
   end
 
   def scrape_detail_ebay(skill, detail_page_url)
-    # TODO follow amazon example
+    if !detail_page_url.start_with?('http://')
+      return puts 'invalid url, moving on'
+    end
+
+    begin
+      # open the detail page with noko
+      book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => get_user_agent))
+
+      # get the isbn-13 number first, if no isbn then we throw away the book
+      # get the author too. don't waste the loop and do later
+      isNextCellIsbn = false
+      isNextCellAuthor = false
+      isbn13 = ''
+      author = ''
+
+      # .itemAttr table, list the td tags, isbn13 should be inside one of them
+      book_page.css('.itemAttr td').each do |node|
+        cellContent = node.text.strip
+        puts "product details field: #{cellContent}"
+
+        # checks if next cell is author or isbn (due to the way the html is structured)
+        if cellContent.include? 'ISBN-13'
+          isNextCellIsbn = true
+          next
+        elsif cellContent.include? 'Author'
+          isNextCellAuthor = true
+          next
+        end
+
+        # if either isNextCellIsbn or isNextCellAuthor is true then record the isbn or author
+        if isNextCellIsbn
+          isbn13 = cellContent
+          isNextCellIsbn = false
+        elsif isNextCellAuthor
+          author = cellContent
+          isNextCellAuthor = false
+        end
+      end
+
+      # throw book if no isbn
+      if isbn13.blank?
+        puts 'no isbn, throw away'
+        return
+      end
+
+      price = ''
+      currency = ''
+
+      # loop and get the details of the price
+      book_page.css('.vi-price span').each do |node|
+        if node.attr('itemprop').eql? 'price'
+          price = node.attr('content')
+          puts price
+        elsif node.attr('itemprop').eql? 'priceCurrency'
+          currency = node.attr('content').upcase
+          puts currency
+        end
+      end
+
+      # throw book if no price or price is not usd, cos cannot compare or price cui
+      if price.blank? || !currency.eql?('USD')
+        puts 'no price, throw away'
+        return
+      end
+
+      # since there's price, convert it to number
+      price = price.to_f
+
+      # get the rest of the relevant data
+
+      # title on book page
+      title = book_page.css("#itemTitle").xpath('text()')
+
+      # check if author is successfully captured earlier
+      if author.eql? ''
+        puts 'really no author'
+      end
+
+      # coverurl on book page
+      image_url = book_page.css("#icImg").attr('src')
+
+      # all data farmed
+
+      # now to find matching isbn
+      existing_book = Book.find_by(isbn13: isbn13)
+      if existing_book.blank?
+        # no existing book hence create new record
+        insert_book(title, isbn13, author, detail_page_url, 'ebay', image_url, price, skill)
+      else
+        # book exists so compare prices
+        update_book(isbn13, price, title, author, detail_page_url, 'ebay', image_url)
+      end
+
+    rescue OpenURI::HTTPError => e
+      puts e
+      puts 'error, try again'
+      # delay before restarting
+      sleep(DELAY)
+      scrape_detail_ebay(skill, detail_page_url)
+    end
   end
 
   # ---------------------- #
@@ -124,7 +230,7 @@ class ScrapeJob < ApplicationJob
         split = node.text.split(' ')
         puts "product details field: #{split}"
         if split[0].include? 'ISBN-13'
-          isbn13 = split[1]
+          isbn13 = split[1].tr('-', '')
           break
         end
       end
