@@ -1,4 +1,12 @@
 <div id="results" class="col-xs-12">
+  
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+
+
   <% if @books.any? %>
     <div style="text-align: center;">
       <p>
@@ -6,7 +14,40 @@
       </p>
     </div>
 
-    <table width="100%" class="table-striped">
+    <% @books.each do |book| %>
+      <div class="col m4 s6">
+        <div class="card sticky-action large hoverable" id='<%= "book-#{book.id}" %>'>
+          <div class="card-image waves-effect waves-block waves-light">
+            <img class="activator" src='<%= book.image_url %>'>
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4 truncate"><%= book.title %></span>
+            $<%= format '%.2f', book.price %>
+            <div class="card-action">
+              FOUND @ <%= link_to book.shop, book.url %>
+              <div class="chip right"><%= book.skill %></div>
+            </div>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">By <%= link_to book.author_name, 'http://google.com/search?q='+book.author_name %><i class="material-icons right">close</i></span>
+            $<%= format '%.2f', book.price %>
+            <div class="right-align"><%= book.isbn13 %></div>
+            <p class="left-align"><%= book.title %></p>
+          </div>
+        </div>
+      </div>
+      <!-- <tr id='<%= "book-#{book.id}" %>'>
+        <td><%= book.isbn13 %></td>
+        <td><%= link_to book.title, book.url, target: '_blank' %></td>
+        <td><%= book.author_name %></td>
+        <td><%= format '%.2f', book.price %></td>
+        <td><%= image_tag book.image_url %></td>
+        <td><%= book.skill %></td>
+        <td><%= book.shop %></td>
+      </tr> -->
+    <% end %>
+
+    <!-- <table width="100%" class="table-striped">
       <thead>
       <tr>
         <th>ISBN-13</th>
@@ -31,7 +72,7 @@
         </tr>
       <% end %>
       </tbody>
-    </table>
+    </table> -->
   <% else %>
     <div style="text-align: center;">
       <p>
