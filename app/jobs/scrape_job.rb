@@ -74,7 +74,7 @@ class ScrapeJob < ApplicationJob
 
     begin
       # open the detail page with noko
-      book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => USER_AGENT))
+      book_page = Nokogiri::HTML(open(detail_page_url, 'User-Agent' => get_user_agent))
 
       # get the isbn-13 number first, if no isbn then we throw away the book
       # get the author too. don't waste the loop and do later
