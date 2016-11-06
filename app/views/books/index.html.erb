@@ -1,10 +1,19 @@
+<table>
+	<tr>
+		<td width='50%'><p><%= link_to 'Home', root_path %></p></td>
+		<td width='50%'><p><%= link_to 'Admin Console', admin_path, :class=>"color"%></p></td>
+	</tr>
+	<tr>
+		<td colspan=2><h1>BOOKS</h1></td>
+	</tr>
+	<tr>
+		<td colspan=2 align=center>
+			<%= form_tag(books_path, id: "search-form", method: "get") do%>
+			<%= text_field_tag :search, params[:search], placeholder: "Search... (ISBN, Author, Language)", :class => 'text'%>
+			<% end %>
+		</td>
+	</tr>
+</table>
 <div class="row">
-  <div class="col-xs-12">
-    <h1>books</h1>
-  </div>
-
-  <%= render 'results' %>
-
-	<p><%= link_to 'Home', root_path %></p>
-  <p><%= link_to 'Admin Console', admin_path %></p>
+  <%= render 'results' %>	
 </div>
